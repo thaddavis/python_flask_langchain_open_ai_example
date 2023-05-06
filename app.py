@@ -3,6 +3,7 @@ from langchain.prompts import PromptTemplate, FewShotPromptTemplate
 from langchain.prompts.example_selector import LengthBasedExampleSelector
 from langchain.llms import OpenAI
 from flask_cors import CORS, cross_origin
+import json
 
 from examples import examples
 
@@ -15,8 +16,8 @@ def hello_world():
     content_type = request.headers.get('Content-Type')
     query = None
     if (content_type == 'application/json'):
-        json = request.json
-        query = json['prompt']
+        json_payload = request.json
+        query = json_payload['prompt']
     else:
         return 'Content-Type not supported!'
 
@@ -68,7 +69,9 @@ def hello_world():
     
     resp = llm(prompt)
     print('resp', resp)
-    # print(json.loads(resp))
+    # print(' - ! - ', json.loads(resp))
 
-    # JSONresp = json.loads(resp)
-    return resp
+    return {
+        'statusCode': 200,
+        'body': resp
+    }
