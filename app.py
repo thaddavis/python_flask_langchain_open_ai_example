@@ -15,7 +15,9 @@ def query_open_ai():
         return 'Content-Type not supported!'
 
     llm = ChatOpenAI(temperature=0, model_name='gpt-3.5-turbo')
-    resp = llm([HumanMessage(content=prompt)])
+
+    formatted_template = f'Please respond as Donald Trump would to the following query: {prompt}'
+    resp = llm([HumanMessage(content=formatted_template)])
 
     return {
         'statusCode': 200,
@@ -24,6 +26,5 @@ def query_open_ai():
 
 
 '''test cURL
-curl -XPOST --header "Content-Type: application/json" -d "{\"prompt\":\"What is 3 + 3?\"}" localhost:5000/query_open_ai
 curl -XPOST --header "Content-Type: application/json" -d "{\"prompt\":\"What is the color of an orange?\"}" localhost:5000/query_open_ai 
 '''

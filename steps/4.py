@@ -1,5 +1,6 @@
 from flask import Flask, request
-from langchain.llms import OpenAI
+from langchain.chat_models import ChatOpenAI
+from langchain.schema import HumanMessage
 
 app = Flask(__name__)
 
@@ -13,22 +14,17 @@ def query_open_ai():
     else:
         return 'Content-Type not supported!'
 
-    llm = OpenAI(temperature=0, model_name='gpt-3.5-turbo')
+    llm = ChatOpenAI(temperature=0, model_name='gpt-3.5-turbo')
+    
     formatted_template = f'Please respond as Donald Trump would to the following query: {prompt}'
-    resp = llm(formatted_template) 
-
-    print()
-    print(formatted_template)
-    print()
-    print(resp)
-    print()
+    resp = llm([HumanMessage(content=formatted_template)])
 
     return {
         'statusCode': 200,
-        'body': resp
+        'body': resp.content
     }
 
 
 '''test cURL
-curl -XPOST --header "Content-Type: application/json" -d "{\"prompt\":\"What is 4 + 4?\"}" localhost:5000/query_open_ai 
+curl -XPOST --header "Content-Type: application/json" -d "{\"prompt\":\"What is the color of an orange?\"}" localhost:5000/query_open_ai 
 '''
