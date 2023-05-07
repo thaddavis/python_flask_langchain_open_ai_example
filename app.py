@@ -55,11 +55,12 @@ def query_open_ai():
     print(final_prompt)
     print()
 
+    resp = llm([HumanMessage(content=final_prompt)])
+    
     return {
-        'statusCode': 500,
-        'body': 'TODO'
+        'statusCode': 200,
+        'body': resp.content
     }
-
 
 '''test cURL
 curl -XPOST --header "Content-Type: application/json" -d "{\"prompt\":\"What is the greatest country in the history of mankind?\"}" localhost:5000/query_open_ai 
