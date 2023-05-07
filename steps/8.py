@@ -30,7 +30,6 @@ def query_open_ai():
 
     prompt_selector = LengthBasedExampleSelector(
         examples=examples,
-        # examples=[],
         example_prompt=prompt_tmplt,
         # max_length=46
     )
@@ -45,25 +44,21 @@ def query_open_ai():
     dynamic_prompt = FewShotPromptTemplate(
         example_selector=prompt_selector,
         example_prompt=prompt_tmplt,
-        prefix="""Please respond as Donald Trump would""",
-        suffix="Please respond as Donald Trump would\n{query}\n",
-        input_variables=["query"],
+        prefix="""Answer each query""",
+        suffix="Query: {input}\n",
+        input_variables=["input"],
         example_separator="\n\n",
     )
 
-    final_prompt = dynamic_prompt.format(query=f'{prompt}')
+    final_prompt = dynamic_prompt.format(input=f'{prompt}')
 
     print()
     print('final_prompt', final_prompt)
     print()
     
-    resp = llm(final_prompt)
-
-    # resp = llm(prompt_tmplt.format(example_query='What is 2 + 2?', example_response='4'))
-    
     return {
-        'statusCode': 200,
-        'body': resp
+        'statusCode': 500,
+        'body': 'TODO'
     }
 
 
