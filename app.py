@@ -2,6 +2,9 @@ from flask import Flask, request
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import PromptTemplate
 from langchain.schema import HumanMessage
+from langchain.prompts.example_selector import LengthBasedExampleSelector
+
+from examples_test import examples
 
 app = Flask(__name__)
 
@@ -23,13 +26,17 @@ def query_open_ai():
         template=formatted_template,
     )
 
+    prompt_selector = LengthBasedExampleSelector(
+        examples=examples,
+        example_prompt=prompt_tmplt,
+        max_length=42
+    )
+
     print()
-    print('prompt_tmplt formatted')
+    print('prompt_selector', prompt_selector)
     print()
-    print(prompt_tmplt.format(example_query='What is 2 + 2?', example_response='4'))
-    print()
-    print(prompt_tmplt.format(example_query='What color is an orange?', example_response='Well my friends, the color of an orange is orange of course.'))
-    print()
+
+    # example_text_lengths will count the tokens (or word count) of each example (query + response)
 
     return {
         'statusCode': 500,
