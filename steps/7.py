@@ -1,6 +1,6 @@
 from flask import Flask, request
 from langchain.llms import OpenAI
-from langchain.prompts import PromptTemplate
+from langchain.prompts import PromptTemplate, FewShotPromptTemplate
 from langchain.prompts.example_selector import LengthBasedExampleSelector
 
 from examples_test import examples
@@ -31,14 +31,30 @@ def query_open_ai():
     prompt_selector = LengthBasedExampleSelector(
         examples=examples,
         example_prompt=prompt_tmplt,
-        max_length=20
+        # max_length=46
     )
+
+    # max_length appears to clip all the examples including and
+    # following the last example that crosses the max_length threshold
 
     print()
     print('prompt_selector', prompt_selector)
     print()
 
-    # example_text_lengths will count the tokens of each example (query + response)
+    dynamic_prompt = FewShotPromptTemplate(
+        example_selector=prompt_selector,
+        example_prompt=prompt_tmplt,
+        prefix="""Answer each query""",
+        suffix="Query: {input}\n",
+        input_variables=["input"],
+        example_separator="\n\n",
+    )
+
+    final_prompt = dynamic_prompt.format(input=f'{prompt}')
+
+    print()
+    print('final_prompt', final_prompt)
+    print()
     
     return {
         'statusCode': 500,

@@ -56,9 +56,11 @@ def query_open_ai():
     print('final_prompt', final_prompt)
     print()
     
+    resp = llm(final_prompt)
+    
     return {
-        'statusCode': 500,
-        'body': 'TODO'
+        'statusCode': 200,
+        'body': resp
     }
 
 

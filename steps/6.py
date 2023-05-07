@@ -1,6 +1,9 @@
 from flask import Flask, request
 from langchain.llms import OpenAI
 from langchain.prompts import PromptTemplate
+from langchain.prompts.example_selector import LengthBasedExampleSelector
+
+from examples_test import examples
 
 app = Flask(__name__)
 
@@ -25,6 +28,18 @@ def query_open_ai():
     print('prompt_tmplt formatted', prompt_tmplt.format(example_query='What is 2 + 2?', example_response='4'))
     print()
 
+    prompt_selector = LengthBasedExampleSelector(
+        examples=examples,
+        example_prompt=prompt_tmplt,
+        max_length=20
+    )
+
+    print()
+    print('prompt_selector', prompt_selector)
+    print()
+
+    # example_text_lengths will count the tokens of each example (query + response)
+    
     return {
         'statusCode': 500,
         'body': 'TODO'
