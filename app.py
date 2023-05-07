@@ -1,6 +1,6 @@
 from flask import Flask, request
 from langchain.chat_models import ChatOpenAI
-from langchain.prompts import PromptTemplate
+from langchain.prompts import PromptTemplate, FewShotPromptTemplate
 from langchain.schema import HumanMessage
 from langchain.prompts.example_selector import LengthBasedExampleSelector
 
@@ -38,6 +38,23 @@ def query_open_ai():
 
     # example_text_lengths will count the tokens (or word count) of each example (query + response)
 
+    dynamic_prompt = FewShotPromptTemplate(
+        example_selector=prompt_selector,
+        example_prompt=prompt_tmplt,
+        prefix="""Answer each query""",
+        suffix="Please respond as Donald Trump would.\n{input}\n",
+        input_variables=["input"],
+        example_separator="\n",
+    )
+
+    final_prompt = dynamic_prompt.format(input=f'{prompt}')
+
+    print()
+    print('final_prompt')
+    print()
+    print(final_prompt)
+    print()
+
     return {
         'statusCode': 500,
         'body': 'TODO'
@@ -45,5 +62,5 @@ def query_open_ai():
 
 
 '''test cURL
-curl -XPOST --header "Content-Type: application/json" -d "{\"prompt\":\"\"}" localhost:5000/query_open_ai 
+curl -XPOST --header "Content-Type: application/json" -d "{\"prompt\":\"What is the greatest country in the history of mankind?\"}" localhost:5000/query_open_ai 
 '''
