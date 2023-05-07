@@ -160,3 +160,5 @@ cython_debug/
 #.idea/
 
 environment_vars.sh
+
+.env
