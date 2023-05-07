@@ -38,7 +38,7 @@ def query_open_ai():
     print('prompt_selector', prompt_selector)
     print()
 
-    # example_text_lengths will count the tokens of each example (query + )
+    # example_text_lengths will count the tokens of each example (query + response)
     
     return {
         'statusCode': 500,
