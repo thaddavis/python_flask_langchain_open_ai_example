@@ -160,3 +160,7 @@ cython_debug/
 #.idea/
 
 environment_vars.sh
+
+.env
+
+node_modules/

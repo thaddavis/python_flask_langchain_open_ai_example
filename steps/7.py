@@ -1,6 +1,7 @@
 from flask import Flask, request
-from langchain.llms import OpenAI
-from langchain.prompts import PromptTemplate
+from langchain.chat_models import ChatOpenAI
+from langchain.prompts import PromptTemplate, FewShotPromptTemplate
+from langchain.schema import HumanMessage
 from langchain.prompts.example_selector import LengthBasedExampleSelector
 
 from examples_test import examples
@@ -17,29 +18,43 @@ def query_open_ai():
     else:
         return 'Content-Type not supported!'
 
-    llm = OpenAI(temperature=0, model_name='gpt-3.5-turbo')
+    llm = ChatOpenAI(temperature=0, model_name='gpt-3.5-turbo')
+
     formatted_template = '''Please respond as Donald Trump would.\n{example_query} {example_response}'''
     prompt_tmplt = PromptTemplate(
         input_variables=["example_query", "example_response"],
         template=formatted_template,
     )
 
-    print()
-    print('prompt_tmplt formatted', prompt_tmplt.format(example_query='What is 2 + 2?', example_response='4'))
-    print()
-
     prompt_selector = LengthBasedExampleSelector(
         examples=examples,
         example_prompt=prompt_tmplt,
-        max_length=20
+        max_length=42
     )
 
     print()
     print('prompt_selector', prompt_selector)
     print()
 
-    # example_text_lengths will count the tokens of each example (query + response)
-    
+    # example_text_lengths will count the tokens (or word count) of each example (query + response)
+
+    dynamic_prompt = FewShotPromptTemplate(
+        example_selector=prompt_selector,
+        example_prompt=prompt_tmplt,
+        prefix="""Answer each query""",
+        suffix="Please respond as Donald Trump would.\n{input}\n",
+        input_variables=["input"],
+        example_separator="\n",
+    )
+
+    final_prompt = dynamic_prompt.format(input=f'{prompt}')
+
+    print()
+    print('final_prompt')
+    print()
+    print(final_prompt)
+    print()
+
     return {
         'statusCode': 500,
         'body': 'TODO'
@@ -47,5 +62,5 @@ def query_open_ai():
 
 
 '''test cURL
-curl -XPOST --header "Content-Type: application/json" -d "{\"prompt\":\"What is 4 + 4?\"}" localhost:5000/query_open_ai 
+curl -XPOST --header "Content-Type: application/json" -d "{\"prompt\":\"What is the greatest country in the history of mankind?\"}" localhost:5000/query_open_ai 
 '''
