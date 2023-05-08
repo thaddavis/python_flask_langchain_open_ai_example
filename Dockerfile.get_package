@@ -1,0 +1,10 @@
+FROM public.ecr.aws/lambda/python:3.9-arm64
+
+COPY requirements.txt ${LAMBDA_TASK_ROOT}/
+
+WORKDIR ${LAMBDA_TASK_ROOT}
+
+# v HACK for getting the packages for then uploading as layer to AWS lambda : )
+RUN pip install --target ./package -r requirements.txt
+
+CMD [ "lambda_handler.lambda_handler" ]

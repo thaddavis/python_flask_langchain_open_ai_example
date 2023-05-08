@@ -162,3 +162,5 @@ cython_debug/
 environment_vars.sh
 
 .env
+
+node_modules/

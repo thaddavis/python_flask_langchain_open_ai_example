@@ -1,0 +1,21 @@
+---
+version: "3"
+
+services:
+  lambda_func_get_package:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.get_package
+    volumes:
+      - package:/var/task/package
+    ports:
+      - 9000:8080
+    command: /var/task/copy_python_packages.sh
+
+volumes:
+  package:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./package

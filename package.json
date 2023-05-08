@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --watch '**/*' -e py --exec ./build.sh"
+    "dev": "nodemon --watch '**/*' -e py --exec ./build.sh",
+    "build_package": "docker-compose up --build",
+    "build_package_clean": "docker-compose down && rm -rf package/*"
   },
   "keywords": [],
   "author": "",

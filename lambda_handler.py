@@ -1,4 +1,5 @@
 import json
+import logging
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import PromptTemplate, FewShotPromptTemplate
 from langchain.schema import HumanMessage
@@ -19,8 +20,11 @@ examples = [
     }
 ]
 
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
 def lambda_handler(event, context):
-    print('Hello World!!!')
+    logger.info('Hello World!!!')
 
     content_type = event['headers']['content-type']
     prompt = None
