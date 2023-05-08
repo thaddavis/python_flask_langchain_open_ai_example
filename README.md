@@ -19,7 +19,20 @@ This is not a video about AWS lambda but I will quickly show you how to incorpor
 - Architecture choose `arm64`
 - copy the contents of `lambda_handler.py` into the `Code source` editor
 
-### Create a layer from the `my-deployment-package.zip` directory
+or
+
+- zip -r function.zip lambda_handler.py 
+- aws lambda create-function \
+  --function-name WHATEVER_YOU_WANT \
+  --package-type Zip \
+  --zip-file fileb://function.zip \
+  --runtime python3.9 \
+  --architectures arm64 \
+  --role arn:aws:iam::333427308013:role/lambda-ex \
+  --handler lambda_handler.lambda_handler \
+  --profile aws_lambda_101 \
+  --region us-east-1
+
 
 ##### Tips for testing the lambda function locally
 
